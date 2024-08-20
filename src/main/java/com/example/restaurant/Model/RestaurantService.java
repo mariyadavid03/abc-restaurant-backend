@@ -6,41 +6,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "services")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
+@AllArgsConstructor
+public class RestaurantService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String service_name;
 
     @Column(nullable = false)
-    private String password;
+    private String service_desc;
 
-    @Column(nullable = false)
-    private String role;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String mobileNo;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column
+    private byte[] service_image_data;
 }

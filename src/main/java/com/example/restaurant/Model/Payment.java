@@ -1,46 +1,41 @@
 package com.example.restaurant.Model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "users")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
+import java.sql.Timestamp;
 
+@Entity
+@Table(name = "payments")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "delivery_id", nullable = false)
+    private DeliveryReservation delivery_id;
 
     @Column(nullable = false)
-    private String password;
+    private BigDecimal amount;
 
     @Column(nullable = false)
-    private String role;
+    private Timestamp payment_date_time;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String mobileNo;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column
+    private String payment_status;
 }
