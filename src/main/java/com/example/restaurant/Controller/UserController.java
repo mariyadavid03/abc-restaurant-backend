@@ -3,7 +3,6 @@ package com.example.restaurant.Controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.User;
@@ -27,12 +25,14 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.allUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<User>> getUser(@PathVariable ObjectId id) {
-        return new ResponseEntity<>(userService.singleUser(id), HttpStatus.OK);
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        return user.map(u -> new ResponseEntity<>(u, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/add")
@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<String> removeUser(@PathVariable ObjectId id) {
-        Optional<User> user = userService.removeUser(id);
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        Optional<User> user = userService.deleteUser(id);
         if (user.isPresent()) {
             return new ResponseEntity<>("User removed successfully", HttpStatus.OK);
         } else {
