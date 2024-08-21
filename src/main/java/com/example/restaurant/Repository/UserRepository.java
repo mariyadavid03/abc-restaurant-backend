@@ -6,5 +6,5 @@ import com.example.restaurant.Model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
+    User findByUsernameAndPassword(String username, String password);
 }

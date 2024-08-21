@@ -1,11 +1,13 @@
 package com.example.restaurant.Controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.restaurant.Model.User;
 import com.example.restaurant.Service.UserService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -48,6 +51,24 @@ public class UserController {
             return new ResponseEntity<>("User removed successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginRequest) {
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+        String role = loginRequest.get("role");
+
+        User user = userService.findByUsernameAndPassword(username, password);
+
+        Map<String, String> response = new HashMap<>();
+        if (user != null && role.equals(user.getRole())) {
+            response.put("message", "Login successful");
+            response.put("role", user.getRole());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
