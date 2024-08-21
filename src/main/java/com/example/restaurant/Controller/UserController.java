@@ -60,10 +60,11 @@ public class UserController {
         String password = loginRequest.get("password");
         String role = loginRequest.get("role");
 
-        User user = userService.findByUsernameAndPassword(username, password);
+        boolean isAuthenticated = userService.authenticateUser(username, password);
+        User user = userService.findByUsername(username);
 
         Map<String, String> response = new HashMap<>();
-        if (user != null && role.equals(user.getRole())) {
+        if (isAuthenticated && user != null && role.equals(user.getRole())) {
             response.put("message", "Login successful");
             response.put("role", user.getRole());
             return ResponseEntity.ok(response);
