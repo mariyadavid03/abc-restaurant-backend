@@ -33,4 +33,8 @@ public class QueryResponseService {
         }
         return false;
     }
+
+    public QueryResponse getResponseByQueryId(Long queryId) {
+        return repository.findByQueryId(queryId);
+    }
 }

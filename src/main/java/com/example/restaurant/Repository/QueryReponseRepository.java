@@ -7,5 +7,5 @@ import com.example.restaurant.Model.QueryResponse;
 
 @Repository
 public interface QueryReponseRepository extends JpaRepository<QueryResponse, Long> {
-
+    QueryResponse findByQueryId(Long queryId);
 }

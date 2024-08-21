@@ -36,6 +36,16 @@ public class QueryResponseController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/query/{queryId}")
+    public ResponseEntity<QueryResponse> getResponseByQueryId(@PathVariable("queryId") Long queryId) {
+        QueryResponse response = service.getResponseByQueryId(queryId);
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<QueryResponse> addResponse(@RequestBody QueryResponse response) {
         QueryResponse newResponse = service.addResponse(response);

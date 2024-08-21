@@ -1,6 +1,7 @@
 package com.example.restaurant.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +50,18 @@ public class CustomerQueryController {
             return new ResponseEntity<>("Query removed successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Query not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/updateStatus/{id}")
+    public ResponseEntity<CustomerQuery> updateQueryStatus(@PathVariable Long id,
+            @RequestBody Map<String, String> requestBody) {
+        String status = requestBody.get("status");
+        CustomerQuery updatedQuery = service.updateQueryStatus(id, status);
+        if (updatedQuery != null) {
+            return new ResponseEntity<>(updatedQuery, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

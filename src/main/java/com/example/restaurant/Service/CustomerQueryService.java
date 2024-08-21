@@ -35,4 +35,14 @@ public class CustomerQueryService {
         return false;
     }
 
+    public CustomerQuery updateQueryStatus(Long id, String status) {
+        CustomerQuery query = repository.findById(id).orElse(null);
+        if (query != null) {
+            query.setStatus(status);
+            return repository.save(query);
+        } else {
+            return null; // or throw an exception
+        }
+    }
+
 }

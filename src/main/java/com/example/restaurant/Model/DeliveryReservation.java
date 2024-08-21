@@ -36,7 +36,7 @@ public class DeliveryReservation {
     @Column(nullable = false)
     private String delivery_address;
 
-    @Column(nullable = false)
+    @Column
     private Timestamp delivery_date_time;
 
     @Column
