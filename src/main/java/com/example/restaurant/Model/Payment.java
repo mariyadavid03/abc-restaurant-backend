@@ -28,14 +28,11 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = false)
-    private DeliveryReservation delivery_id;
+    private DeliveryReservation delivery;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
-    private Timestamp payment_date_time;
-
-    @Column
-    private String payment_status;
+    @Column(name = "payment_date_time", nullable = false, updatable = false)
+    private Timestamp createdAt;
 }

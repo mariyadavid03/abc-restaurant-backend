@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.User;
@@ -71,6 +73,36 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody User user) {
+        try {
+            userService.createUser(user);
+            return ResponseEntity.ok("Signup successful");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getByUsername")
+    public ResponseEntity<?> getUserIdByUsername(@RequestParam String username) {
+        try {
+            Long userId = userService.getUserIdByUsername(username);
+            if (userId != null) {
+                return ResponseEntity.ok(userId);
+            } else {
+                return ResponseEntity.status(404).body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Server error");
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateAccount(@PathVariable Long id, @RequestBody User userDetails) {
+        User updatedUser = userService.updateUser(id, userDetails);
+        return ResponseEntity.ok(updatedUser);
     }
 
 }

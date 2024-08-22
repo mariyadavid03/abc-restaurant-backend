@@ -50,4 +50,10 @@ public class DeliveryController {
             return new ResponseEntity<>("Reservation not found", HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/delivery/add")
+    public ResponseEntity<DeliveryReservation> addDelivery(@RequestBody DeliveryReservation delivery) {
+        DeliveryReservation savedDelivery = service.addItem(delivery);
+        return ResponseEntity.ok(savedDelivery);
+    }
 }

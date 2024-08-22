@@ -26,11 +26,11 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = false)
-    private DeliveryReservation delivery_id;
+    private DeliveryReservation delivery;
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    private Menu item_id;
+    private Menu menu;
 
     @Column
     private int quantity;

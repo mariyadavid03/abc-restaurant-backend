@@ -46,7 +46,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void createCustomerUser(User user) {
+    public void createUser(User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("User with this email already exists");
         }
@@ -56,7 +56,11 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("customer");
+
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("customer");
+        }
+
         userRepository.save(user);
     }
 
@@ -66,5 +70,26 @@ public class UserService {
             return passwordEncoder.matches(password, user.getPassword());
         }
         return false;
+    }
+
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return (user != null) ? user.getId() : null;
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+
+        System.out.println("Updating user with ID: " + id);
+        System.out.println("Name: " + userDetails.getName());
+        System.out.println("Email: " + userDetails.getEmail());
+        System.out.println("MobileNo: " + userDetails.getMobileNo());
+
+        user.setName(userDetails.getName());
+        user.setEmail(userDetails.getEmail());
+        user.setMobileNo(userDetails.getMobileNo());
+
+        return userRepository.save(user);
     }
 }

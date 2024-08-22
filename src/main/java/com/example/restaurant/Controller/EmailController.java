@@ -13,16 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.restaurant.Model.User;
-import com.example.restaurant.Service.UserService;
-
 @RestController
 public class EmailController {
     @Autowired
     JavaMailSender javaMailSender;
-
-    @Autowired
-    private UserService userService;
 
     private Map<String, String> otpStorage = new HashMap<>();
 
@@ -58,16 +52,4 @@ public class EmailController {
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        try {
-            if (user.getMobileNo() == null || user.getMobileNo().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mobile number is required");
-            }
-            userService.createCustomerUser(user);
-            return ResponseEntity.ok("Signup successful");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 }

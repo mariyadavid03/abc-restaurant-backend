@@ -20,11 +20,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // Disable CSRF protection for testing
+                .csrf().disable()
                 .authorizeRequests()
-                .anyRequest().permitAll() // Allow all requests without authentication
+                .anyRequest().permitAll()
                 .and()
-                .formLogin().disable(); // Disable default login form
+                .formLogin().disable();
 
         return http.build();
     }

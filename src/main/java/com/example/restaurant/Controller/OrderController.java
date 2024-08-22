@@ -36,7 +36,7 @@ public class OrderController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Order> addPayment(@RequestBody Order order) {
+    public ResponseEntity<Order> addOrder(@RequestBody Order order) {
         Order newOrder = service.addOrder(order);
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
