@@ -54,12 +54,15 @@ public class GalleryController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image) {
+    public ResponseEntity<String> uploadImage(
+            @RequestParam("image_data") MultipartFile image_data,
+            @RequestParam("image_name") String image_name) {
         try {
-            galleryService.saveImage(image);
-            return ResponseEntity.ok("Image uploaded successfully");
+            galleryService.saveImageItem(image_data, image_name);
+            return ResponseEntity.ok("item uploaded successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to add item: " + e.getMessage());
         }
     }
 

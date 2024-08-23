@@ -36,10 +36,10 @@ public class GalleryService {
         return gOptional;
     }
 
-    public void saveImage(MultipartFile image) throws IOException {
+    public void saveImageItem(MultipartFile image_data, String image_name) throws IOException {
         Gallery gallery = new Gallery();
-        gallery.setImage_name(image.getOriginalFilename());
-        gallery.setImage_data(image.getBytes());
+        gallery.setImage_name(image_name);
+        gallery.setImage_data(image_data.getBytes());
         galleryRepository.save(gallery);
     }
 }
