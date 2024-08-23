@@ -36,6 +36,10 @@ public class RestaurantServiceService {
         return false;
     }
 
+    public byte[] getImageById(Long id) {
+        return repository.findImageById(id);
+    }
+
     public void saveServiceImage(MultipartFile image, String serviceName, String serviceDesc) throws IOException {
         RestaurantService service = new RestaurantService();
         service.setService_name(serviceName);
@@ -43,5 +47,24 @@ public class RestaurantServiceService {
         service.setService_image_data(image.getBytes());
 
         repository.save(service);
+    }
+
+    public RestaurantService updateService(Long id, MultipartFile image, String serviceName, String serviceDesc)
+            throws IOException {
+        Optional<RestaurantService> optional = repository.findById(id);
+
+        if (optional.isPresent()) {
+            RestaurantService service = optional.get();
+            service.setService_name(serviceName);
+            service.setService_desc(serviceDesc);
+
+            if (image != null && !image.isEmpty()) {
+                service.setService_image_data(image.getBytes());
+            }
+
+            return repository.save(service);
+        } else {
+            throw new RuntimeException("Service with id " + id + " not found");
+        }
     }
 }

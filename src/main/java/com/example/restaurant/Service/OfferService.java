@@ -36,7 +36,7 @@ public class OfferService {
         return optional;
     }
 
-    public void saveOfferImage(MultipartFile image, String offerName, String offerDesc, String discount,
+    public void saveOffer(MultipartFile image, String offerName, String offerDesc, String discount,
             String validPeriod) throws IOException {
         Offer offer = new Offer();
         offer.setOffer_name(offerName);
@@ -44,7 +44,32 @@ public class OfferService {
         offer.setDiscount(discount);
         offer.setValid_period(validPeriod);
         offer.setOffer_image_data(image.getBytes());
-
         repository.save(offer);
     }
+
+    public byte[] getImageById(Long id) {
+        return repository.findImageById(id);
+    }
+
+    public Offer updateOffer(Long id, MultipartFile image, String offerName, String offerDesc, String discount,
+            String validPeriod) throws IOException {
+        Optional<Offer> optionalOffer = repository.findById(id);
+
+        if (optionalOffer.isPresent()) {
+            Offer offer = optionalOffer.get();
+            offer.setOffer_name(offerName);
+            offer.setOffer_desc(offerDesc);
+            offer.setDiscount(discount);
+            offer.setValid_period(validPeriod);
+
+            if (image != null && !image.isEmpty()) {
+                offer.setOffer_image_data(image.getBytes());
+            }
+
+            return repository.save(offer);
+        } else {
+            throw new RuntimeException("Offer with id " + id + " not found");
+        }
+    }
+
 }

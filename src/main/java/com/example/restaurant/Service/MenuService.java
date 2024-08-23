@@ -64,15 +64,11 @@ public class MenuService {
             menu.setItem_desc(menuDetails.getItem_desc());
             menu.setPrice(menuDetails.getPrice());
 
-            // Handle image data
             if (image != null && !image.isEmpty()) {
                 menu.setItem_image_data(image.getBytes());
             }
-
-            // Save the updated menu item
             return repository.save(menu);
         } else {
-            // Menu item not found
             return null;
         }
     }
