@@ -81,11 +81,6 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
 
-        System.out.println("Updating user with ID: " + id);
-        System.out.println("Name: " + userDetails.getName());
-        System.out.println("Email: " + userDetails.getEmail());
-        System.out.println("MobileNo: " + userDetails.getMobileNo());
-
         user.setName(userDetails.getName());
         user.setEmail(userDetails.getEmail());
         user.setMobileNo(userDetails.getMobileNo());

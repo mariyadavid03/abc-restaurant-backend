@@ -52,4 +52,75 @@ public class EmailController {
         }
     }
 
+    @PostMapping("/query-response")
+    public ResponseEntity<String> sendResponse(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String response = request.get("response");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("abcrestaurant@gmail.com");
+        message.setTo(email);
+        message.setSubject("Your Query Response");
+        message.setText(response);
+        javaMailSender.send(message);
+
+        return ResponseEntity.ok("Response Sent");
+
+    }
+
+    @PostMapping("/sendReservationEmail")
+    public ResponseEntity<String> sendReservationEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String reservationCode = request.get("reservation_code");
+        String reservationDateTime = request.get("reservation_date_time");
+        String numGuests = request.get("num_guests");
+        String specialRequests = request.get("special_requests");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("abcrestaurant@gmail.com");
+        message.setTo(email);
+        message.setSubject("Confirmation of Your Reservation");
+        String emailContent = "Dear Customer,\n\n" +
+                "Thank you for your reservation. We are pleased to confirm that your reservation at ABC Restaurant have been successfully placed.\n\n"
+                +
+                "Here are the details:\n\n" +
+                "Reservation Code: " + reservationCode + "\n" +
+                "Date & Time " + reservationDateTime + "\n" +
+                "Number of Diners " + numGuests + "\n\n" +
+                "If you have any questions or need further assistance, please do not hesitate to contact us.\n\n" +
+                "Best regards,\n" +
+                "The ABC Restaurant Team";
+        message.setText(emailContent);
+
+        javaMailSender.send(message);
+        return ResponseEntity.ok("Reservation Details Sent");
+    }
+
+    @PostMapping("/sendPaymentEmail")
+    public ResponseEntity<String> sendPaymentEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String deliveryCode = request.get("code");
+        String totalPrice = request.get("amount");
+        String paymentTime = request.get("createdAt");
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("abcrestaurant@gmail.com");
+        message.setTo(email);
+        message.setSubject("Confirmation of Your Delivery and Payment");
+        String emailContent = "Dear Customer,\n\n" +
+                "Thank you for your order. We are pleased to confirm that your delivery and payment have been successfully processed.\n\n"
+                +
+                "Here are the details of your transaction:\n\n" +
+                "Delivery Code: " + deliveryCode + "\n" +
+                "Total Amount: LKR " + totalPrice + "\n" +
+                "Payment Date & Time: " + paymentTime + "\n\n" +
+                "If you have any questions or need further assistance, please do not hesitate to contact us.\n\n" +
+                "Best regards,\n" +
+                "The ABC Restaurant Team";
+        message.setText(emailContent);
+
+        javaMailSender.send(message);
+        return ResponseEntity.ok("Delivery & Payment Details Sent");
+    }
+
 }

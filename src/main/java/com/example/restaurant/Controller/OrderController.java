@@ -50,4 +50,9 @@ public class OrderController {
             return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getbydelivery/{deliveryId}")
+    public List<Order> getOrdersByDeliveryId(@PathVariable Long deliveryId) {
+        return service.getOrdersByDeliveryId(deliveryId);
+    }
 }

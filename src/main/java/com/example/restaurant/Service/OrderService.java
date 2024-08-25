@@ -33,4 +33,8 @@ public class OrderService {
         }
         return false;
     }
+
+    public List<Order> getOrdersByDeliveryId(Long deliveryId) {
+        return repository.findByDeliveryId(deliveryId);
+    }
 }

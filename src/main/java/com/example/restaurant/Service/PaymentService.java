@@ -34,4 +34,8 @@ public class PaymentService {
         return false;
     }
 
+    public Payment getPaymentByDeliveryId(Long deliveryId) {
+        return repository.findByDeliveryId(deliveryId);
+    }
+
 }

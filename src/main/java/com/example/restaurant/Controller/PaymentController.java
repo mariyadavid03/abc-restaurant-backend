@@ -50,4 +50,9 @@ public class PaymentController {
             return new ResponseEntity<>("Payment not found", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getbydelivery/{deliveryId}")
+    public Payment getPaymentByDeliveryId(@PathVariable Long deliveryId) {
+        return service.getPaymentByDeliveryId(deliveryId);
+    }
 }
