@@ -17,11 +17,11 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "delivery_reservations")
+@Table(name = "delivery")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeliveryReservation {
+public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +35,6 @@ public class DeliveryReservation {
 
     @Column(nullable = false)
     private String delivery_address;
-
-    @Column
-    private Timestamp delivery_date_time;
 
     @Column
     private String special_instructions;

@@ -8,23 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.restaurant.Model.RestaurantService;
-import com.example.restaurant.Repository.ServiceRepository;
+import com.example.restaurant.Model.Facility;
+import com.example.restaurant.Repository.FacilityRepository;
 
 @Service
-public class RestaurantServiceService {
+public class FacilityService {
     @Autowired
-    private ServiceRepository repository;
+    private FacilityRepository repository;
 
-    public List<RestaurantService> getAllServices() {
+    public List<Facility> getAllServices() {
         return repository.findAll();
     }
 
-    public Optional<RestaurantService> getServiceById(Long id) {
+    public Optional<Facility> getServiceById(Long id) {
         return repository.findById(id);
     }
 
-    public RestaurantService addService(RestaurantService service) {
+    public Facility addService(Facility service) {
         return repository.save(service);
     }
 
@@ -41,7 +41,7 @@ public class RestaurantServiceService {
     }
 
     public void saveServiceImage(MultipartFile image, String serviceName, String serviceDesc) throws IOException {
-        RestaurantService service = new RestaurantService();
+        Facility service = new Facility();
         service.setService_name(serviceName);
         service.setService_desc(serviceDesc);
         service.setService_image_data(image.getBytes());
@@ -49,12 +49,12 @@ public class RestaurantServiceService {
         repository.save(service);
     }
 
-    public RestaurantService updateService(Long id, MultipartFile image, String serviceName, String serviceDesc)
+    public Facility updateService(Long id, MultipartFile image, String serviceName, String serviceDesc)
             throws IOException {
-        Optional<RestaurantService> optional = repository.findById(id);
+        Optional<Facility> optional = repository.findById(id);
 
         if (optional.isPresent()) {
-            RestaurantService service = optional.get();
+            Facility service = optional.get();
             service.setService_name(serviceName);
             service.setService_desc(serviceDesc);
 

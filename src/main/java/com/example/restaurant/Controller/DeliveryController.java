@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.restaurant.Model.DeliveryReservation;
+import com.example.restaurant.Model.Delivery;
 import com.example.restaurant.Service.DeliveryService;
 
 @RestController
@@ -24,20 +25,20 @@ public class DeliveryController {
     private DeliveryService service;
 
     @GetMapping
-    public ResponseEntity<List<DeliveryReservation>> getAllReservations() {
+    public ResponseEntity<List<Delivery>> getAllReservations() {
         return new ResponseEntity<>(service.getAllReservations(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DeliveryReservation> getReservation(@PathVariable Long id) {
-        Optional<DeliveryReservation> optional = service.getReservationById(id);
+    public ResponseEntity<Delivery> getReservation(@PathVariable Long id) {
+        Optional<Delivery> optional = service.getReservationById(id);
         return optional.map(i -> new ResponseEntity<>(i, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<DeliveryReservation> addReservation(@RequestBody DeliveryReservation reservation) {
-        DeliveryReservation newReservation = service.addItem(reservation);
+    public ResponseEntity<Delivery> addReservation(@RequestBody Delivery reservation) {
+        Delivery newReservation = service.addItem(reservation);
         return new ResponseEntity<>(newReservation, HttpStatus.CREATED);
     }
 
@@ -45,15 +46,35 @@ public class DeliveryController {
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
         boolean isDeleted = service.deleteItem(id);
         if (isDeleted) {
-            return new ResponseEntity<>("Reservation removed successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Delivery removed successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Reservation not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Delivery not found", HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/delivery/add")
-    public ResponseEntity<DeliveryReservation> addDelivery(@RequestBody DeliveryReservation delivery) {
-        DeliveryReservation savedDelivery = service.addItem(delivery);
+    public ResponseEntity<Delivery> addDelivery(@RequestBody Delivery delivery) {
+        Delivery savedDelivery = service.addItem(delivery);
+
         return ResponseEntity.ok(savedDelivery);
+    }
+
+    @GetMapping("/getDeliverynByUser/{id}")
+    public ResponseEntity<List<Delivery>> getDeliverynByUser(@PathVariable Long id) {
+        List<Delivery> delivery = service.getDeliverynByUser(id);
+        if (delivery.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(delivery, HttpStatus.OK);
+    }
+
+    @PutMapping("/cancelDelivery/{id}")
+    public ResponseEntity<String> cancelDelivery(@PathVariable Long id) {
+        boolean isCanceled = service.cancelDelivery(id);
+        if (isCanceled) {
+            return new ResponseEntity<>("Delivery canceled successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Delivery not found or could not be canceled", HttpStatus.NOT_FOUND);
+        }
     }
 }

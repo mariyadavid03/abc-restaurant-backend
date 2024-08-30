@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,25 @@ public class DineInController {
     @GetMapping
     public ResponseEntity<List<DineInReservation>> getAllReservations() {
         return new ResponseEntity<>(service.getAllReservations(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getReservationByUser/{id}")
+    public ResponseEntity<List<DineInReservation>> getReservationByUser(@PathVariable Long id) {
+        List<DineInReservation> reservations = service.getReservationByUser(id);
+        if (reservations.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
+
+    @PutMapping("/cancelReservation/{id}")
+    public ResponseEntity<String> cancelReservation(@PathVariable Long id) {
+        boolean isCanceled = service.cancelReservation(id);
+        if (isCanceled) {
+            return new ResponseEntity<>("Reservation canceled successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Reservation not found or could not be canceled", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")

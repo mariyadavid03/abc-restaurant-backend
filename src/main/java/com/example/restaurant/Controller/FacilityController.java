@@ -20,23 +20,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.restaurant.Model.RestaurantService;
-import com.example.restaurant.Service.RestaurantServiceService;
+import com.example.restaurant.Model.Facility;
+import com.example.restaurant.Service.FacilityService;
 
 @RestController
 @RequestMapping("/service")
-public class ServiceController {
+public class FacilityController {
     @Autowired
-    private RestaurantServiceService service;
+    private FacilityService service;
 
     @GetMapping
-    public ResponseEntity<List<RestaurantService>> gettAllServices() {
+    public ResponseEntity<List<Facility>> gettAllServices() {
         return new ResponseEntity<>(service.getAllServices(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantService> getService(@PathVariable Long id) {
-        Optional<RestaurantService> optional = service.getServiceById(id);
+    public ResponseEntity<Facility> getService(@PathVariable Long id) {
+        Optional<Facility> optional = service.getServiceById(id);
         return optional.map(i -> new ResponseEntity<>(i, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -56,8 +56,8 @@ public class ServiceController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<RestaurantService> addService(@RequestBody RestaurantService Restservice) {
-        RestaurantService newService = service.addService(Restservice);
+    public ResponseEntity<Facility> addService(@RequestBody Facility Restservice) {
+        Facility newService = service.addService(Restservice);
         return new ResponseEntity<>(newService, HttpStatus.CREATED);
     }
 
@@ -93,7 +93,7 @@ public class ServiceController {
             @RequestParam(value = "image", required = false) MultipartFile image) {
 
         try {
-            RestaurantService updatedService = service.updateService(id, image, serviceName, serviceDesc);
+            Facility updatedService = service.updateService(id, image, serviceName, serviceDesc);
             return new ResponseEntity<>(updatedService, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

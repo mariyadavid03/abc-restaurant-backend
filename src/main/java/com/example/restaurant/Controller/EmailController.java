@@ -74,7 +74,7 @@ public class EmailController {
         String reservationCode = request.get("reservation_code");
         String reservationDateTime = request.get("reservation_date_time");
         String numGuests = request.get("num_guests");
-        String specialRequests = request.get("special_requests");
+        // String specialRequests = request.get("special_requests");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("abcrestaurant@gmail.com");

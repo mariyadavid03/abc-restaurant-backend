@@ -28,7 +28,7 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = false)
-    private DeliveryReservation delivery;
+    private Delivery delivery;
 
     @Column(nullable = false)
     private BigDecimal amount;

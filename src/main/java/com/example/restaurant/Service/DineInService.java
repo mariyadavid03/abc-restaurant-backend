@@ -18,6 +18,10 @@ public class DineInService {
         return repository.findAll();
     }
 
+    public List<DineInReservation> getReservationByUser(Long userId) {
+        return repository.getAllReservationUser(userId);
+    }
+
     public Optional<DineInReservation> getReservationById(Long id) {
         return repository.findById(id);
     }
@@ -29,6 +33,17 @@ public class DineInService {
     public boolean deleteReservation(Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean cancelReservation(Long reservationId) {
+        Optional<DineInReservation> reservation = repository.findById(reservationId);
+        if (reservation.isPresent()) {
+            DineInReservation dineInReservation = reservation.get();
+            dineInReservation.setStatus("Canceled");
+            repository.save(dineInReservation);
             return true;
         }
         return false;

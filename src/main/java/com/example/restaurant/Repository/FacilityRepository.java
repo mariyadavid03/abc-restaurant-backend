@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.restaurant.Model.RestaurantService;
+import com.example.restaurant.Model.Facility;
 
 @Repository
-public interface ServiceRepository extends JpaRepository<RestaurantService, Long> {
-    @Query("SELECT s.service_image_data FROM RestaurantService s WHERE s.id = :id")
+public interface FacilityRepository extends JpaRepository<Facility, Long> {
+    @Query("SELECT f.service_image_data FROM Facility f WHERE f.id = :id")
     byte[] findImageById(@Param("id") Long id);
 }

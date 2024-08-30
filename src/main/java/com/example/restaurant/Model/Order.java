@@ -26,7 +26,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = false)
-    private DeliveryReservation delivery;
+    private Delivery delivery;
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
