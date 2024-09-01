@@ -18,7 +18,7 @@ public class EmailController {
     @Autowired
     JavaMailSender javaMailSender;
 
-    private Map<String, String> otpStorage = new HashMap<>();
+    public Map<String, String> otpStorage = new HashMap<>();
 
     @PostMapping("/request-otp")
     public ResponseEntity<String> sendOtp(@RequestBody Map<String, String> request) {

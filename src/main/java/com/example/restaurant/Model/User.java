@@ -25,10 +25,10 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    protected String username;
 
     @Column(nullable = false)
-    private String password;
+    protected String password;
 
     @Column(nullable = false)
     private String role;
