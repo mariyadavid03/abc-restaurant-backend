@@ -20,7 +20,12 @@ public class DeliveryReportE2ETest {
 
     @BeforeAll
     public static void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Windows\\System32\\chromedriver.exe");
+        String chromeDriverPath = System.getenv("CHROMEDRIVER_PATH");
+        System.out.println("CHROMEDRIVER_PATH: " + chromeDriverPath);
+        if (chromeDriverPath == null) {
+            throw new RuntimeException("CHROMEDRIVER_PATH environment variable is not set.");
+        }
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }

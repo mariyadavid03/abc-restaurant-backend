@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -26,30 +26,26 @@ jobs:
 
       - name: Install Google Chrome
         run: |
-          $chromeInstallerUrl = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
-          $chromeInstallerPath = "$env:TEMP\chrome_installer.exe"
-          Invoke-WebRequest -Uri $chromeInstallerUrl -OutFile $chromeInstallerPath
-          Start-Process -FilePath $chromeInstallerPath -Args "/silent" -NoNewWindow -Wait
-          Remove-Item -Path $chromeInstallerPath
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          sudo apt-get install -f
 
       - name: Verify Google Chrome Installation
-        run: |
-          & "C:\Program Files\Google\Chrome\Application\chrome.exe" --version
+        run: google-chrome --version
 
       - name: Install ChromeDriver
         run: |
-          $chromeDriverVersion = (Invoke-WebRequest -Uri "https://chromedriver.storage.googleapis.com/LATEST_RELEASE").Content
-          $chromeDriverUrl = "https://chromedriver.storage.googleapis.com/$chromeDriverVersion/chromedriver_win32.zip"
-          $chromeDriverZipPath = "$env:TEMP\chromedriver_win32.zip"
-          $chromeDriverPath = "C:\chromedriver"
-          Invoke-WebRequest -Uri $chromeDriverUrl -OutFile $chromeDriverZipPath
-          Expand-Archive -Path $chromeDriverZipPath -DestinationPath $chromeDriverPath
-          $env:Path += ";$chromeDriverPath"
-          Remove-Item -Path $chromeDriverZipPath
+          CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Verify ChromeDriver Installation
-        run: |
-          & "$chromeDriverPath\chromedriver.exe" --version
+        run: chromedriver --version
+
+      - name: Set up environment variables
+        run: echo "CHROMEDRIVER_PATH=/usr/local/bin/chromedriver" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn clean install
