@@ -1,6 +1,7 @@
 package com.example.restaurant.Controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -89,5 +90,54 @@ public class EmailControllerTest {
                 + (response.getStatusCode() == HttpStatus.BAD_REQUEST && "Email is required".equals(response.getBody())
                         ? "Passed"
                         : "Failed"));
+    }
+
+    @Test
+    public void testSendResponse() {
+        Map<String, String> request = new HashMap<>();
+        request.put("email", "customer@example.com");
+        request.put("response", "Thank you for your query. Here is the response.");
+
+        doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
+        ResponseEntity<String> responseEntity = emailController.sendResponse(request);
+
+        verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
+        assert (responseEntity.getStatusCode() == HttpStatus.OK);
+        assert (responseEntity.getBody().equals("Response Sent"));
+        System.out.println("Query response email sent successfully");
+    }
+
+    @Test
+    public void testSendReservationEmail() {
+        Map<String, String> request = new HashMap<>();
+        request.put("email", "customer@example.com");
+        request.put("reservation_code", "RES123");
+        request.put("reservation_date_time", "2024-09-02 19:00");
+        request.put("num_guests", "4");
+
+        doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
+        ResponseEntity<String> responseEntity = emailController.sendReservationEmail(request);
+
+        verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
+        assert (responseEntity.getStatusCode() == HttpStatus.OK);
+        assert (responseEntity.getBody().equals("Reservation Details Sent"));
+        System.out.println("Reservation confirmation email sent successfully");
+    }
+
+    @Test
+    public void testSendPaymentEmail() {
+        Map<String, String> request = new HashMap<>();
+        request.put("email", "customer@example.com");
+        request.put("code", "DEL123");
+        request.put("amount", "5000");
+        request.put("createdAt", "2024-09-02 10:00");
+
+        doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
+        ResponseEntity<String> responseEntity = emailController.sendPaymentEmail(request);
+
+        verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
+        assert (responseEntity.getStatusCode() == HttpStatus.OK);
+        assert (responseEntity.getBody().equals("Delivery & Payment Details Sent"));
+        System.out.println("Delivery confirmation email sent successfully");
     }
 }

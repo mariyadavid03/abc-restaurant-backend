@@ -41,7 +41,7 @@ public class CustomerQueryService {
             query.setStatus(status);
             return repository.save(query);
         } else {
-            return null; // or throw an exception
+            return null;
         }
     }
 
