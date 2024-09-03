@@ -26,26 +26,30 @@ jobs:
 
       - name: Install Google Chrome
         run: |
-          $ErrorActionPreference = "Stop"
-          $chromeInstallerUrl = "https://dl.google.com/chrome/install/GoogleChromeSetup.exe"
-          $chromeInstallerPath = "$env:USERPROFILE\chrome_installer.exe"
+          $chromeInstallerUrl = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
+          $chromeInstallerPath = "$env:TEMP\chrome_installer.exe"
           Invoke-WebRequest -Uri $chromeInstallerUrl -OutFile $chromeInstallerPath
-          Start-Process -FilePath $chromeInstallerPath -ArgumentList '/silent /install' -Wait
+          Start-Process -FilePath $chromeInstallerPath -Args "/silent" -NoNewWindow -Wait
           Remove-Item -Path $chromeInstallerPath
-
-      - name: Install ChromeDriver
-        run: |
-          $CHROMEDRIVER_VERSION = Invoke-RestMethod -Uri https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-          Invoke-WebRequest -Uri "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_win32.zip" -OutFile "chromedriver_win32.zip"
-          Expand-Archive -Path "chromedriver_win32.zip" -DestinationPath "$env:ProgramFiles"
-          Move-Item -Path "$env:ProgramFiles\chromedriver.exe" -Destination "C:\Windows\System32\chromedriver.exe"
 
       - name: Verify Google Chrome Installation
         run: |
           & "C:\Program Files\Google\Chrome\Application\chrome.exe" --version
 
+      - name: Install ChromeDriver
+        run: |
+          $chromeDriverVersion = (Invoke-WebRequest -Uri "https://chromedriver.storage.googleapis.com/LATEST_RELEASE").Content
+          $chromeDriverUrl = "https://chromedriver.storage.googleapis.com/$chromeDriverVersion/chromedriver_win32.zip"
+          $chromeDriverZipPath = "$env:TEMP\chromedriver_win32.zip"
+          $chromeDriverPath = "C:\chromedriver"
+          Invoke-WebRequest -Uri $chromeDriverUrl -OutFile $chromeDriverZipPath
+          Expand-Archive -Path $chromeDriverZipPath -DestinationPath $chromeDriverPath
+          $env:Path += ";$chromeDriverPath"
+          Remove-Item -Path $chromeDriverZipPath
+
       - name: Verify ChromeDriver Installation
-        run: chromedriver --version
+        run: |
+          & "$chromeDriverPath\chromedriver.exe" --version
 
       - name: Build with Maven
         run: mvn clean install
@@ -60,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: junit-test-results
-          path: target\surefire-reports\
+          path: target/surefire-reports/
