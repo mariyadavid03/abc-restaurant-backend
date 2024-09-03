@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -26,17 +26,26 @@ jobs:
 
       - name: Install Google Chrome
         run: |
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb
-          sudo apt-get install -f
+          $ErrorActionPreference = "Stop"
+          $chromeInstallerUrl = "https://dl.google.com/chrome/install/GoogleChromeSetup.exe"
+          $chromeInstallerPath = "$env:USERPROFILE\chrome_installer.exe"
+          Invoke-WebRequest -Uri $chromeInstallerUrl -OutFile $chromeInstallerPath
+          Start-Process -FilePath $chromeInstallerPath -ArgumentList '/silent /install' -Wait
+          Remove-Item -Path $chromeInstallerPath
 
       - name: Install ChromeDriver
         run: |
-          CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
+          $CHROMEDRIVER_VERSION = Invoke-RestMethod -Uri https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+          Invoke-WebRequest -Uri "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_win32.zip" -OutFile "chromedriver_win32.zip"
+          Expand-Archive -Path "chromedriver_win32.zip" -DestinationPath "$env:ProgramFiles"
+          Move-Item -Path "$env:ProgramFiles\chromedriver.exe" -Destination "C:\Windows\System32\chromedriver.exe"
+
+      - name: Verify Google Chrome Installation
+        run: |
+          & "C:\Program Files\Google\Chrome\Application\chrome.exe" --version
+
+      - name: Verify ChromeDriver Installation
+        run: chromedriver --version
 
       - name: Build with Maven
         run: mvn clean install
@@ -51,4 +60,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: junit-test-results
-          path: target/surefire-reports/
+          path: target\surefire-reports\
