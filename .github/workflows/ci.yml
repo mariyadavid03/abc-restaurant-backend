@@ -25,10 +25,10 @@ jobs:
           distribution: "zulu"
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests="**/e2e/**"
+        run: mvn clean install
 
       - name: Package application
-        run: mvn package -DskipTests="**/e2e/**"
+        run: mvn package
 
       - name: Upload JUnit test results
         uses: actions/upload-artifact@v3

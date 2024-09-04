@@ -23,8 +23,7 @@ public class LoginE2ETest {
 
     @BeforeAll
     public static void setUp() {
-        // Arrange: Set up WebDriver
-        String chromeDriverPath = System.getenv("CHROMEDRIVER_PATH");
+        String chromeDriverPath = "C:\\Tools\\chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
@@ -41,7 +40,7 @@ public class LoginE2ETest {
         usernameField.sendKeys("newuser1");
 
         WebElement passwordField = driver.findElement(By.id("formBasicPassword"));
-        passwordField.sendKeys("1234");
+        passwordField.sendKeys("NewUser@123!");
 
         WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
         submitButton.click();

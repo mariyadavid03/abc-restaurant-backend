@@ -24,11 +24,7 @@ public class SessionManagmentTest {
 
     @BeforeAll
     public static void setUp() {
-        String chromeDriverPath = System.getenv("CHROMEDRIVER_PATH");
-        System.out.println("CHROMEDRIVER_PATH: " + chromeDriverPath);
-        if (chromeDriverPath == null) {
-            throw new RuntimeException("CHROMEDRIVER_PATH environment variable is not set.");
-        }
+        String chromeDriverPath = "C:\\Tools\\chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
@@ -45,7 +41,7 @@ public class SessionManagmentTest {
         WebElement usernameField = driver.findElement(By.id("formBasic"));
         usernameField.sendKeys("newuser1");
         WebElement passwordField = driver.findElement(By.id("formBasicPassword"));
-        passwordField.sendKeys("1234");
+        passwordField.sendKeys("NewUser@123!");
         WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
         submitButton.click();
         wait.until(ExpectedConditions.urlToBe("http://localhost:3000/"));

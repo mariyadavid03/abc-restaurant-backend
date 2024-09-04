@@ -21,20 +21,10 @@ public class DeliveryReportE2ETest {
 
     @BeforeAll
     public static void setUp() {
-        String chromeDriverPath = System.getenv("CHROMEDRIVER_PATH");
-        System.out.println("CHROMEDRIVER_PATH: " + chromeDriverPath);
-        if (chromeDriverPath == null) {
-            throw new RuntimeException("CHROMEDRIVER_PATH environment variable is not set.");
-        }
+        String chromeDriverPath = "C:\\Tools\\chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-debugging-port=9222");
-        options.addArguments("--disable-gpu");
-
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
