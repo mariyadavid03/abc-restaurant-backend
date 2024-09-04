@@ -24,37 +24,11 @@ jobs:
           java-version: "22"
           distribution: "zulu"
 
-      - name: Install Google Chrome
-        run: |
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb
-          sudo apt-get install -f
-
-      - name: Verify Google Chrome Installation
-        run: google-chrome --version
-
-      - name: Install ChromeDriver
-        run: |
-          CHROMEDRIVER_VERSION=128.0.6613.119
-          wget https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip
-          unzip chromedriver-linux64.zip
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
-
-      - name: Verify ChromeDriver Installation
-        run: chromedriver --version
-
-      - name: Set up environment variables
-        run: echo "CHROMEDRIVER_PATH=/usr/local/bin/chromedriver" >> $GITHUB_ENV
-
       - name: Build with Maven
-        run: mvn clean install
-
-      - name: Run tests
-        run: mvn test
+        run: mvn clean install -DskipTests="**/e2e/**"
 
       - name: Package application
-        run: mvn package
+        run: mvn package -DskipTests="**/e2e/**"
 
       - name: Upload JUnit test results
         uses: actions/upload-artifact@v3

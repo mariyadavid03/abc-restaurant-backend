@@ -33,7 +33,6 @@ public class EmailControllerTest {
 
     @Test
     public void testSendOtp_Success() {
-        // Prepare request body
         Map<String, String> request = new HashMap<>();
         request.put("email", "test@example.com");
         ResponseEntity<String> response = emailController.sendOtp(request);

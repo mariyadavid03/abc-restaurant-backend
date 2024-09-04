@@ -91,7 +91,7 @@ public class MenuServiceTest {
         assertTrue(result.getItem_name().equals(updatedMenuDetails.getItem_name()));
         assertTrue(result.getItem_desc().equals(updatedMenuDetails.getItem_desc()));
         assertTrue(result.getPrice().equals(updatedMenuDetails.getPrice()));
-        assertTrue(result.getItem_image_data().length > 0); // Ensure image data was updated
+        assertTrue(result.getItem_image_data().length > 0);
         System.out.println("Update Item test passed");
     }
 }

@@ -79,4 +79,17 @@ public class DineInServiceTest {
         assertTrue(mockReservation.getStatus().equals("Canceled"));
         System.out.println("Cancel Reservation test passed");
     }
+
+    @Test
+    public void testCancelReservation_Fail() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.save(mockReservation)).thenReturn(mockReservation);
+
+        boolean result = dineInService.cancelReservation(1L);
+
+        verify(repository, times(0)).save(mockReservation);
+        assertFalse(result);
+        assertFalse(mockReservation.getStatus().equals("Canceled"));
+        System.out.println("Cancel Reservation failed test passed");
+    }
 }

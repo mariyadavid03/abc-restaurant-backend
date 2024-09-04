@@ -46,23 +46,72 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testCreateUser_WithStrongPassword() {
+        // Arrange
+        User userWithStrongPassword = new User();
+        userWithStrongPassword.setUsername("newUser");
+        userWithStrongPassword.setPassword("StrongP@ssw0rd!");
+        userWithStrongPassword.setEmail("stronguser@example.com");
+
+        // Act
+        when(userRepository.findByEmail(userWithStrongPassword.getEmail())).thenReturn(null);
+        when(userRepository.findByUsername(userWithStrongPassword.getUsername())).thenReturn(null);
+        when(passwordEncoder.encode("StrongP@ssw0rd!")).thenReturn("encodedPassword");
+        userService.createUser(userWithStrongPassword);
+
+        // Assert
+        verify(userRepository, times(1)).save(userWithStrongPassword);
+        assertTrue(userWithStrongPassword.getPassword().equals("encodedPassword"));
+        System.out.println("Test passed: User with a strong password was created successfully.");
+    }
+
+    @Test
+    public void testCreateUser_WithWeakPassword() {
+        // Arrange
+        User userWithWeakPassword = new User();
+        userWithWeakPassword.setUsername("newUser");
+        userWithWeakPassword.setPassword("weakpass");
+        userWithWeakPassword.setEmail("weakuser@example.com");
+
+        // Act
+        when(userRepository.findByEmail(userWithWeakPassword.getEmail())).thenReturn(null);
+        when(userRepository.findByUsername(userWithWeakPassword.getUsername())).thenReturn(null);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userService.createUser(userWithWeakPassword);
+        });
+
+        // Assert
+        assertTrue(exception.getMessage().contains("Password does not meet strength requirements"));
+        verify(userRepository, times(0)).save(userWithWeakPassword);
+        System.out.println("Test passed: Exception was thrown for weak password.");
+    }
+
+    @Test
     public void testAuthenticateUser_Success() {
+        // Arrange
         when(userRepository.findByUsername("testUser")).thenReturn(mockUser);
         when(passwordEncoder.matches("plainPassword", "encodedPassword")).thenReturn(true);
 
+        // Act
         boolean result = userService.authenticateUser("testUser", "plainPassword");
         System.out.println("Result of authentication sucess: " + result);
 
+        // Assert
         assertTrue(result);
     }
 
     @Test
     public void testAuthenticateUser_Fail() {
+        // Arrange
         when(userRepository.findByUsername("testUser")).thenReturn(mockUser);
         when(passwordEncoder.matches("plainPassword", "encodedPassword")).thenReturn(true);
 
+        // Act
         boolean result = userService.authenticateUser("invalidUser", "invalidPassword");
         System.out.println("Result of authentication fail: " + result);
+
+        // Assert
         assertFalse(result);
     }
 

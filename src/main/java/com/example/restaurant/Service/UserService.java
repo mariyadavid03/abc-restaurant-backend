@@ -2,6 +2,7 @@ package com.example.restaurant.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,6 +56,10 @@ public class UserService {
             throw new RuntimeException("Username already taken");
         }
 
+        if (!isPasswordStrong(user.getPassword())) {
+            throw new RuntimeException("Password does not meet strength requirements");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (user.getRole() == null || user.getRole().isEmpty()) {
@@ -86,5 +91,14 @@ public class UserService {
         user.setMobileNo(userDetails.getMobileNo());
 
         return userRepository.save(user);
+    }
+
+    public boolean isPasswordStrong(String password) {
+        String passwordPattern = "^(?=.*[0-9])" +
+                "(?=.*[a-z])" +
+                "(?=.*[A-Z])" +
+                "(?=.*[@#$%^&+=!])" +
+                "(?=\\S+$).{8,}$";
+        return Pattern.matches(passwordPattern, password);
     }
 }

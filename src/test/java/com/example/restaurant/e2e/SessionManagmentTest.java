@@ -32,16 +32,11 @@ public class SessionManagmentTest {
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-debugging-port=9222");
-        options.addArguments("--disable-gpu");
-
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testAddToCartAndSessionUpdate() {
         // Login
@@ -49,27 +44,23 @@ public class SessionManagmentTest {
 
         WebElement usernameField = driver.findElement(By.id("formBasic"));
         usernameField.sendKeys("newuser1");
-
         WebElement passwordField = driver.findElement(By.id("formBasicPassword"));
         passwordField.sendKeys("1234");
-
         WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
         submitButton.click();
-
         wait.until(ExpectedConditions.urlToBe("http://localhost:3000/"));
 
-        // Navigate to the menu page and add item
+        // Navigate to menu page and add item
         driver.get("http://localhost:3000/menu");
 
         WebElement appetizersTab = driver.findElement(By.cssSelector("button.tab-button"));
         appetizersTab.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.menu-item")));
-
         WebElement firstAddToCartButton = wait
                 .until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.add-to-cart")));
         JavascriptExecutor jss = (JavascriptExecutor) driver;
-        jss.executeScript("arguments[0].scrollIntoView(true);", firstAddToCartButton); // Scroll to the element
-        jss.executeScript("arguments[0].click();", firstAddToCartButton); // Click with JavaScript
+        jss.executeScript("arguments[0].scrollIntoView(true);", firstAddToCartButton);
+        jss.executeScript("arguments[0].click();", firstAddToCartButton);
 
         try {
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
