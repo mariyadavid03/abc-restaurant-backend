@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import com.example.restaurant.Repository.UserRepository;
+
 public class EmailControllerTest {
 
     @InjectMocks
@@ -26,6 +29,9 @@ public class EmailControllerTest {
     @Mock
     private JavaMailSender javaMailSender;
 
+    @Mock
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -33,11 +39,11 @@ public class EmailControllerTest {
 
     @Test
     public void testSendOtp_Success() {
+        when(userRepository.findByEmail("test@example.com")).thenReturn(null);
         Map<String, String> request = new HashMap<>();
         request.put("email", "test@example.com");
         ResponseEntity<String> response = emailController.sendOtp(request);
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo("OTP sent to your email");
         System.out.println("testSendOtp_Success: " + (response.getStatusCode() == HttpStatus.OK ? "Passed" : "Failed"));
