@@ -1,5 +1,6 @@
 package com.example.restaurant.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ import com.example.restaurant.Model.DineInReservation;
 public interface DineInRepository extends JpaRepository<DineInReservation, Long> {
     @Query("SELECT r FROM DineInReservation r WHERE r.user.id = :id")
     List<DineInReservation> getAllReservationUser(@Param("id") Long id);
+
+    List<DineInReservation> findByReservationDateTimeBetween(Timestamp startDate, Timestamp endDate);
 
 }

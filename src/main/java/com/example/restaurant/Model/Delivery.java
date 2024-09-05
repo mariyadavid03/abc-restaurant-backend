@@ -42,7 +42,7 @@ public class Delivery {
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 }

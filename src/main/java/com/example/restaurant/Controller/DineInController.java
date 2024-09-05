@@ -1,5 +1,6 @@
 package com.example.restaurant.Controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.DineInReservation;
@@ -68,6 +70,21 @@ public class DineInController {
             return new ResponseEntity<>("Reservation removed successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Reservation not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<DineInReservation>> getReservationsByDateRange(
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        try {
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr + " 23:59:59");
+            List<DineInReservation> reservations = service.getReservationByDateRange(startDate, endDate);
+            return new ResponseEntity<>(reservations, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

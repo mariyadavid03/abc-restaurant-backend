@@ -1,5 +1,6 @@
 package com.example.restaurant.Controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.CustomerQuery;
@@ -62,6 +64,21 @@ public class CustomerQueryController {
             return new ResponseEntity<>(updatedQuery, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<CustomerQuery>> getQueryByDateRange(
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        try {
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr + " 23:59:59");
+            List<CustomerQuery> queries = service.getQueryByDateRange(startDate, endDate);
+            return new ResponseEntity<>(queries, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

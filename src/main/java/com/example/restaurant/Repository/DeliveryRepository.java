@@ -1,5 +1,6 @@
 package com.example.restaurant.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,7 @@ import com.example.restaurant.Model.Delivery;
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     @Query("SELECT d FROM Delivery d WHERE d.user.id = :id")
     List<Delivery> getAllDeliveryUser(@Param("id") Long id);
+
+    List<Delivery> findByCreatedAtBetween(Timestamp startDate, Timestamp endDate);
+
 }

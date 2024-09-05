@@ -1,16 +1,25 @@
 package com.example.restaurant.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.restaurant.Model.Delivery;
 import com.example.restaurant.Repository.DeliveryRepository;
 
 @Service
 public class DeliveryService {
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @Autowired
     private DeliveryRepository repository;
 
@@ -47,5 +56,20 @@ public class DeliveryService {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public boolean deleteDelivery(Long deliveryId) {
+        if (repository.existsById(deliveryId)) {
+            orderService.deleteOrdersByDeliveryId(deliveryId);
+            paymentService.deletePaymentsByDeliveryId(deliveryId);
+            repository.deleteById(deliveryId);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Delivery> geDeliveryByDateRange(Timestamp startDate, Timestamp endDate) {
+        return repository.findByCreatedAtBetween(startDate, endDate);
     }
 }

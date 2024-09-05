@@ -1,5 +1,6 @@
 package com.example.restaurant.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,10 @@ public class CustomerQueryService {
         } else {
             return null;
         }
+    }
+
+    public List<CustomerQuery> getQueryByDateRange(Timestamp startDate, Timestamp endDate) {
+        return repository.findByCreatedAtBetween(startDate, endDate);
     }
 
 }

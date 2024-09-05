@@ -1,5 +1,6 @@
 package com.example.restaurant.Controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.Delivery;
@@ -52,6 +54,16 @@ public class DeliveryController {
         }
     }
 
+    @DeleteMapping("/removeList/{deliveryId}")
+    public ResponseEntity<String> deleteDelivery(@PathVariable Long deliveryId) {
+        boolean isDeleted = service.deleteDelivery(deliveryId);
+        if (isDeleted) {
+            return new ResponseEntity<>("Delivery and associated records removed successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Delivery not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/delivery/add")
     public ResponseEntity<Delivery> addDelivery(@RequestBody Delivery delivery) {
         Delivery savedDelivery = service.addItem(delivery);
@@ -75,6 +87,21 @@ public class DeliveryController {
             return new ResponseEntity<>("Delivery canceled successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Delivery not found or could not be canceled", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Delivery>> getDeliveryByDateRange(
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        try {
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr + " 23:59:59");
+            List<Delivery> deliveries = service.geDeliveryByDateRange(startDate, endDate);
+            return new ResponseEntity<>(deliveries, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

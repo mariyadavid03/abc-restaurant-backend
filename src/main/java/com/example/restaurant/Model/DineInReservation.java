@@ -33,8 +33,8 @@ public class DineInReservation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private Timestamp reservation_date_time;
+    @Column(name = "reservation_date_time", nullable = false)
+    private Timestamp reservationDateTime;
 
     @Column(nullable = false)
     private Integer num_guests;

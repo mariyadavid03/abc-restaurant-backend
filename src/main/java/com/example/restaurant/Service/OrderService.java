@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.restaurant.Model.Order;
 import com.example.restaurant.Repository.OrderRepository;
@@ -36,5 +37,10 @@ public class OrderService {
 
     public List<Order> getOrdersByDeliveryId(Long deliveryId) {
         return repository.findByDeliveryId(deliveryId);
+    }
+
+    @Transactional
+    public void deleteOrdersByDeliveryId(Long deliveryId) {
+        repository.deleteByDeliveryId(deliveryId);
     }
 }

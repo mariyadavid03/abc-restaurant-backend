@@ -1,5 +1,6 @@
 package com.example.restaurant.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,10 @@ public class DineInService {
             return true;
         }
         return false;
+    }
+
+    public List<DineInReservation> getReservationByDateRange(Timestamp startDate, Timestamp endDate) {
+        return repository.findByReservationDateTimeBetween(startDate, endDate);
     }
 
 }

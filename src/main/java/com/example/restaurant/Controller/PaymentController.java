@@ -1,5 +1,6 @@
 package com.example.restaurant.Controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restaurant.Model.Payment;
@@ -54,5 +56,20 @@ public class PaymentController {
     @GetMapping("/getbydelivery/{deliveryId}")
     public Payment getPaymentByDeliveryId(@PathVariable Long deliveryId) {
         return service.getPaymentByDeliveryId(deliveryId);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Payment>> getPaymentsByDateRange(
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        try {
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr + " 23:59:59");
+            List<Payment> payments = service.getPaymentsByDateRange(startDate, endDate);
+            return new ResponseEntity<>(payments, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

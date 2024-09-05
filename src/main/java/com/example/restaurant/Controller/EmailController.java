@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.restaurant.Repository.UserRepository;
+
 @RestController
 public class EmailController {
     @Autowired
     JavaMailSender javaMailSender;
+
+    @Autowired
+    UserRepository userRepository;
 
     public Map<String, String> otpStorage = new HashMap<>();
 
@@ -25,6 +30,10 @@ public class EmailController {
         String email = request.get("email");
         if (email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is required");
+        }
+
+        if (userRepository.findByEmail(email) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with this email already exists");
         }
 
         String otp = String.valueOf(new Random().nextInt(999999));

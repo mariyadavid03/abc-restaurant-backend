@@ -10,4 +10,6 @@ import com.example.restaurant.Model.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByDeliveryId(Long deliveryId);
+
+    void deleteByDeliveryId(Long deliveryId);
 }

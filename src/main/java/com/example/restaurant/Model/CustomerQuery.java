@@ -39,7 +39,7 @@ public class CustomerQuery {
     @Column
     private String status = "Pending";
 
-    @Column(updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    private Timestamp created_at;
+    private Timestamp createdAt;
 }
