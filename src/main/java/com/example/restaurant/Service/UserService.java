@@ -90,6 +90,10 @@ public class UserService {
         user.setEmail(userDetails.getEmail());
         user.setMobileNo(userDetails.getMobileNo());
 
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        }
+
         return userRepository.save(user);
     }
 

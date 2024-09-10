@@ -44,7 +44,6 @@ public class DeliveryReportE2ETest {
 
         driver.get("http://localhost:3000/manage/report");
 
-        // Select "Delivery" from the report type dropdown
         WebElement reportTypeDropdown = driver.findElement(By.cssSelector("select[class='form-input']"));
         reportTypeDropdown.sendKeys("Delivery");
 
